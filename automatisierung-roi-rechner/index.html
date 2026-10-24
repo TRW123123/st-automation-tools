@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="ST Automation">
+<link rel="canonical" href="https://trw123123.github.io/st-automation-tools/automatisierung-roi-rechner/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Automatisierung ROI-Rechner: Lohnt sich die Automatisierung?</title>
+<meta name="description" content="Kostenloser ROI-Rechner: Ersparnis pro Monat und Jahr sowie Amortisationszeit für die Automatisierung einer wiederkehrenden Aufgabe berechnen.">
+<style>
+*{box-sizing:border-box}
+:root{--bg:#f6f7fb;--card:#fff;--ink:#1d2433;--mut:#5b6475;--acc:#2f6fed;--acc2:#e8f0fe;--ok:#1f9d55;--warn:#d97706;--bad:#dc2626;--line:#e3e6ee}
+html,body{margin:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;font-size:16px}
+.wrap{max-width:860px;margin:0 auto;padding:24px 16px 40px}
+header h1{font-size:1.7rem;margin:.2em 0 .2em}
+header p{color:var(--mut);margin:0 0 1em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:16px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.card h2{font-size:1.15rem;margin:0 0 .6em}
+label{display:block;font-weight:600;font-size:.92rem;margin:.6em 0 .25em}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+button{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:11px 18px;font:inherit;font-weight:600;cursor:pointer;margin-top:12px}
+button.sec{background:var(--acc2);color:var(--acc)}
+button:hover{filter:brightness(1.05)}
+.out{white-space:pre-wrap}
+.muted{color:var(--mut);font-size:.9rem}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.85rem;color:var(--mut);font-weight:600}
+.pill{display:inline-block;background:var(--acc2);color:var(--acc);border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:600}
+footer{margin-top:28px;text-align:center;color:var(--mut);font-size:.9rem}
+footer a{color:var(--acc)}
+@media (max-width:520px){header h1{font-size:1.4rem}.card{padding:14px}}
+
+.kpis{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.kpi{background:#fafbff;border:1px solid var(--line);border-radius:12px;padding:12px}
+.kpi small{display:block;color:var(--mut);font-size:.82rem}
+.kpi strong{font-size:1.35rem}
+.pos{color:var(--ok)}.neg{color:var(--bad)}
+.unit{display:flex;gap:6px;flex-wrap:wrap}.unit input{flex:1 1 70px;min-width:0}.unit select{flex:1 1 140px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<span class="pill">Kostenloser Rechner</span>
+<h1>Lohnt sich die Automatisierung?</h1>
+<p>Berechne für eine wiederkehrende Aufgabe, wie viel Zeit und Geld eine Automatisierung pro Monat und Jahr spart und wann sich die Investition amortisiert. Die Berechnung läuft nur in deinem Browser.</p>
+</header>
+
+<section class="card">
+<h2>Deine Aufgabe</h2>
+<label for="task">Bezeichnung (optional)</label>
+<input id="task" placeholder="z. B. Rechnungen ins Buchhaltungstool übertragen">
+<div class="grid">
+<div><label for="min">Zeit pro Durchgang (Minuten)</label><input id="min" type="number" min="0" step="1" value="10"></div>
+<div><label for="freq">Häufigkeit</label><div class="unit"><input id="freq" type="number" min="0" step="1" value="20" aria-label="Anzahl"><select id="per" aria-label="Zeitraum"><option value="day">pro Arbeitstag</option><option value="week" selected>pro Woche</option><option value="month">pro Monat</option></select></div></div>
+<div><label for="rate">Stundensatz (€)</label><input id="rate" type="number" min="0" step="1" value="40"></div>
+<div><label for="auto">Restaufwand nach Automatisierung (%)</label><input id="auto" type="number" min="0" max="100" step="5" value="10"></div>
+<div><label for="once">Einmalige Kosten (€)</label><input id="once" type="number" min="0" step="50" value="1500"></div>
+<div><label for="monthly">Laufende Kosten pro Monat (€)</label><input id="monthly" type="number" min="0" step="5" value="30"></div>
+</div>
+<p class="muted">Annahmen: 21 Arbeitstage bzw. 4,33 Wochen pro Monat. Der Restaufwand berücksichtigt z. B. Kontrolle oder Ausnahmen, die weiterhin manuell bleiben.</p>
+</section>
+
+<section class="card" aria-live="polite">
+<h2 id="rtitle">Ergebnis</h2>
+<div class="kpis">
+<div class="kpi"><small>Gesparte Zeit / Monat</small><strong id="hrs">–</strong></div>
+<div class="kpi"><small>Netto-Ersparnis / Monat</small><strong id="pm">–</strong></div>
+<div class="kpi"><small>Netto-Ersparnis / Jahr</small><strong id="pa">–</strong></div>
+<div class="kpi"><small>Amortisation</small><strong id="pay">–</strong></div>
+</div>
+<p id="sum" style="margin-top:14px"></p>
+<table id="tbl"></table>
+</section>
+
+<footer>Ein kostenloses Tool von <a href="https://st-automatisierung.de/" target="_blank" rel="noopener">ST Automatisierung</a> – Automatisierung für kleine Unternehmen.<p class="muted" style="margin-top:8px">Made by <a href="https://st-automatisierung.de/">ST Automatisierung</a> · <a href="../">Weitere kostenlose Tools von ST Automation</a></p></footer>
+</div>
+<script>
+(function(){
+  var ids=["task","min","freq","per","rate","auto","once","monthly"];
+  function n(id){var x=parseFloat(String(document.getElementById(id).value).replace(",","."));return isFinite(x)&&x>0?x:0;}
+  var eur=new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR",maximumFractionDigits:0});
+  var num=new Intl.NumberFormat("de-DE",{maximumFractionDigits:1});
+  function calc(){
+    var mult={day:21,week:4.33,month:1}[document.getElementById("per").value];
+    var runs=n("freq")*mult;
+    var rest=Math.min(n("auto"),100)/100;
+    var hours=runs*n("min")/60*(1-rest);
+    var gross=hours*n("rate");
+    var net=gross-n("monthly");
+    var once=n("once");
+    document.getElementById("hrs").textContent=num.format(hours)+" h";
+    var pm=document.getElementById("pm"),pa=document.getElementById("pa"),pay=document.getElementById("pay");
+    pm.textContent=eur.format(net);pa.textContent=eur.format(net*12);
+    pm.className=pa.className=net>=0?"pos":"neg";
+    var task=document.getElementById("task").value.trim();
+    document.getElementById("rtitle").textContent=task?"Ergebnis: "+task:"Ergebnis";
+    var s;
+    if(net<=0){pay.textContent="nie";pay.className="neg";
+      s="Mit diesen Werten übersteigen die laufenden Kosten die eingesparte Arbeitszeit. Prüfe, ob sich die Aufgabe mit anderen bündeln lässt oder eine günstigere Lösung möglich ist.";}
+    else{var m=once/net;pay.className="pos";
+      pay.textContent=once===0?"sofort":(m<1?"< 1 Monat":num.format(m)+" Monate");
+      var y3=net*36-once;
+      s="Die Automatisierung spart rund "+num.format(hours)+" Stunden im Monat ("+num.format(hours*12)+" h im Jahr). Brutto entspricht das "+eur.format(gross)+" pro Monat, abzüglich "+eur.format(n("monthly"))+" laufender Kosten. Über 3 Jahre ergibt sich nach Abzug der Einmalkosten ein Saldo von "+eur.format(y3)+".";}
+    document.getElementById("sum").textContent=s;
+    var rows="<tr><th>Zeitraum</th><th>Kumulierte Ersparnis</th><th>Saldo inkl. Einmalkosten</th></tr>";
+    [3,6,12,24,36].forEach(function(mo){var c=net*mo,b=c-once;rows+="<tr><td>"+mo+" Monate</td><td>"+eur.format(c)+"</td><td class='"+(b>=0?"pos":"neg")+"'>"+eur.format(b)+"</td></tr>";});
+    document.getElementById("tbl").innerHTML=rows;
+  }
+  ids.forEach(function(id){var el=document.getElementById(id);el.addEventListener("input",calc);el.addEventListener("change",calc);});
+  calc();
+})();
+</script>
+</body>
+</html>

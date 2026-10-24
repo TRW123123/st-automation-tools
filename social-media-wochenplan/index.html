@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="ST Automation">
+<link rel="canonical" href="https://trw123123.github.io/st-automation-tools/social-media-wochenplan/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Social-Media-Wochenplan für lokale Unternehmen</title>
+<meta name="description" content="Kostenloser Generator: Branche und Anzahl Posts wählen und einen Social-Media-Wochenplan mit Post-Ideen und Formaten erhalten.">
+<style>
+*{box-sizing:border-box}
+:root{--bg:#f6f7fb;--card:#fff;--ink:#1d2433;--mut:#5b6475;--acc:#2f6fed;--acc2:#e8f0fe;--ok:#1f9d55;--warn:#d97706;--bad:#dc2626;--line:#e3e6ee}
+html,body{margin:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;font-size:16px}
+.wrap{max-width:860px;margin:0 auto;padding:24px 16px 40px}
+header h1{font-size:1.7rem;margin:.2em 0 .2em}
+header p{color:var(--mut);margin:0 0 1em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:16px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.card h2{font-size:1.15rem;margin:0 0 .6em}
+label{display:block;font-weight:600;font-size:.92rem;margin:.6em 0 .25em}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+button{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:11px 18px;font:inherit;font-weight:600;cursor:pointer;margin-top:12px}
+button.sec{background:var(--acc2);color:var(--acc)}
+button:hover{filter:brightness(1.05)}
+.out{white-space:pre-wrap}
+.muted{color:var(--mut);font-size:.9rem}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.85rem;color:var(--mut);font-weight:600}
+.pill{display:inline-block;background:var(--acc2);color:var(--acc);border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:600}
+footer{margin-top:28px;text-align:center;color:var(--mut);font-size:.9rem}
+footer a{color:var(--acc)}
+@media (max-width:520px){header h1{font-size:1.4rem}.card{padding:14px}}
+
+.day{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0;background:#fafbff}
+.day h3{margin:0 0 4px;font-size:1rem;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.day p{margin:4px 0}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row button{margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<span class="pill">Kostenloser Generator</span>
+<h1>Social-Media-Wochenplan</h1>
+<p>Branche und Anzahl der Posts wählen – du bekommst einen Wochenplan mit konkreten Post-Ideen, Formaten und Hinweisen. Erstellt lokal aus Vorlagen, ohne Anmeldung.</p>
+</header>
+
+<section class="card">
+<h2>Einstellungen</h2>
+<div class="grid">
+<div><label for="ind">Branche</label><select id="ind">
+<option value="friseur">Friseur / Salon</option>
+<option value="restaurant">Restaurant / Café</option>
+<option value="handwerk">Handwerk</option>
+<option value="praxis">Praxis (Arzt, Physio, Zahnarzt)</option>
+<option value="autohaus">Autohaus / Werkstatt</option>
+<option value="einzelhandel">Einzelhandel / Laden</option>
+<option value="fitness">Fitnessstudio / Kurse</option>
+</select></div>
+<div><label for="cnt">Posts pro Woche</label><select id="cnt"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>7</option></select></div>
+<div><label for="name">Name des Betriebs (optional)</label><input id="name" placeholder="z. B. Salon Beispiel"></div>
+</div>
+<div class="row"><button id="gen" type="button">Neuen Plan erstellen</button><button id="copy" class="sec" type="button">Plan kopieren</button></div>
+</section>
+
+<section class="card" aria-live="polite">
+<h2 id="ptitle">Dein Wochenplan</h2>
+<div id="plan"></div>
+<p class="muted">Tipp: Plane die Inhalte am Wochenanfang, fotografiere mehrere Motive auf einmal und beantworte Kommentare zeitnah.</p>
+</section>
+
+<footer>Ein kostenloses Tool von <a href="https://ki-automatisieren.de/" target="_blank" rel="noopener">KI Automatisieren</a> – KI-Social-Media-Betreuung für lokale Unternehmen.<p class="muted" style="margin-top:8px">Made by <a href="https://ki-automatisieren.de/">KI Automatisieren</a> · <a href="../">Weitere kostenlose Tools von ST Automation</a></p></footer>
+</div>
+<script>
+(function(){
+  var DAYS=["Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag","Sonntag"];
+  var SLOTS={2:[1,4],3:[0,2,4],4:[0,2,3,5],5:[0,1,2,3,4],7:[0,1,2,3,4,5,6]};
+  var I={
+    friseur:[
+      ["Reel","Vorher-Nachher einer Verwandlung","Schnitt im Zeitraffer, Ergebnis am Ende zeigen (nur mit Einverständnis der Kundin oder des Kunden)."],
+      ["Karussell","3 Pflegetipps für zu Hause","Je ein Tipp pro Slide, letzte Slide: Frage an die Community."],
+      ["Story","Freie Termine diese Woche","Umfrage-Sticker oder Link zur Terminbuchung."],
+      ["Foto","Team-Vorstellung","Ein Teammitglied mit Lieblingsbehandlung vorstellen."],
+      ["Reel","Trendfrisur der Saison","Kurz erklären, für wen sie passt."],
+      ["Karussell","Produkt im Fokus","Wofür es gut ist und wie man es anwendet."],
+      ["Story","Blick hinter die Kulissen","Morgens vor Öffnung: Salon vorbereiten."]
+    ],
+    restaurant:[
+      ["Reel","Gericht der Woche entsteht","Zubereitung in 15 Sekunden, Anrichten in Nahaufnahme."],
+      ["Foto","Mittagstisch / Wochenkarte","Klares Foto plus Preisliste im Text."],
+      ["Story","Frage an die Gäste","Umfrage: Welches Gericht soll wieder auf die Karte?"],
+      ["Karussell","Zutaten und Herkunft","Lieferanten oder Zutaten vorstellen – nur Fakten, die stimmen."],
+      ["Reel","Ein Tag in der Küche","Kurze Clips vom Team beim Vorbereiten."],
+      ["Foto","Atmosphäre am Abend","Gedeckter Tisch, warmes Licht."],
+      ["Story","Wochenende: Reservierung","Hinweis auf Öffnungszeiten und Reservierungsmöglichkeit."]
+    ],
+    handwerk:[
+      ["Karussell","Projekt Vorher-Nachher","Ausgangslage, Zwischenschritt, Ergebnis (mit Erlaubnis der Kundschaft)."],
+      ["Reel","Handgriff erklärt","Ein Arbeitsschritt in 20 Sekunden erklärt."],
+      ["Foto","Team auf der Baustelle","Gesichter zeigen schafft Vertrauen."],
+      ["Story","Häufige Kundenfrage","Frage einblenden und kurz beantworten."],
+      ["Karussell","Tipp zur Pflege / Wartung","Was Kundinnen und Kunden selbst prüfen können."],
+      ["Reel","Werkzeug oder Material im Fokus","Warum ihr damit arbeitet."],
+      ["Foto","Ausbildung / Stellenangebot","Hinweis, dass ihr Verstärkung sucht – falls zutreffend."]
+    ],
+    praxis:[
+      ["Karussell","Gesundheitstipp für den Alltag","Allgemeine, sachliche Hinweise ohne Heilversprechen."],
+      ["Foto","Team-Vorstellung","Ein Teammitglied und seine Aufgaben vorstellen."],
+      ["Story","Organisatorisches","Sprechzeiten, Urlaub, Terminvergabe."],
+      ["Reel","Rundgang durch die Praxis","Räume zeigen, Patientendaten und Personen nur mit Zustimmung."],
+      ["Karussell","Was passiert bei …?","Ablauf einer typischen Behandlung erklärt."],
+      ["Story","Fragen-Sticker","Häufige Fragen sammeln und in der Folgewoche beantworten."],
+      ["Foto","Wochenendgruß / Saisonhinweis","z. B. Erinnerung an Vorsorge oder Impftermine."]
+    ],
+    autohaus:[
+      ["Reel","Fahrzeug der Woche","Walkaround in 20 Sekunden: Front, Seite, Innenraum, Preis."],
+      ["Karussell","Neu im Bestand","3–5 Fahrzeuge mit Eckdaten je Slide."],
+      ["Story","Frage an die Community","Umfrage: SUV oder Kombi?"],
+      ["Foto","Werkstatt-Team","Wer kümmert sich um Service und Reparatur."],
+      ["Reel","Tipp zur Fahrzeugpflege","z. B. Reifendruck prüfen oder Wechselintervall."],
+      ["Karussell","Übergabe-Moment","Glückliche Neubesitzerin oder Neubesitzer – nur mit Einverständnis."],
+      ["Story","Saisonaktion / Termine","z. B. Reifenwechsel-Termine, falls angeboten."]
+    ],
+    einzelhandel:[
+      ["Reel","Neuheit ausgepackt","Neue Ware kurz zeigen und erklären."],
+      ["Karussell","3 Produkte für einen Anlass","Geschenkideen oder saisonale Auswahl."],
+      ["Story","Umfrage","Welche Farbe / Variante gefällt euch besser?"],
+      ["Foto","Schaufenster / Laden","Stimmungsvolles Bild des Geschäfts."],
+      ["Reel","Mitarbeiter-Empfehlung","Lieblingsprodukt aus dem Team."],
+      ["Karussell","Anwendungstipp","So holt man mehr aus einem Produkt heraus."],
+      ["Story","Öffnungszeiten & Hinweise","Samstag geöffnet? Hier erinnern."]
+    ],
+    fitness:[
+      ["Reel","Übung der Woche","Korrekte Ausführung in 15 Sekunden."],
+      ["Karussell","Kursplan der Woche","Kurse übersichtlich je Tag."],
+      ["Story","Challenge / Umfrage","Wer ist diese Woche dabei?"],
+      ["Foto","Trainerin oder Trainer vorstellen","Schwerpunkte und Lieblingsübung."],
+      ["Reel","Häufiger Fehler beim Training","Falsch vs. richtig zeigen."],
+      ["Karussell","Tipps für Einsteiger","Erste Schritte im Studio."],
+      ["Story","Wochenrückblick","Highlights aus den Kursen – nur mit Zustimmung der Teilnehmenden."]
+    ]
+  };
+  var TIMES={Reel:"Reel / kurzes Video",Karussell:"Karussell-Post",Story:"Story",Foto:"Foto-Post"};
+  var seed=0,last="";
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+  function gen(){
+    var ind=document.getElementById("ind").value,cnt=parseInt(document.getElementById("cnt").value,10);
+    var name=document.getElementById("name").value.trim();
+    var ideas=I[ind],slots=SLOTS[cnt],html="",txt="";
+    var label=document.getElementById("ind").selectedOptions[0].textContent;
+    var title="Wochenplan"+(name?" für "+name:"")+" ("+label+", "+cnt+" Posts)";
+    document.getElementById("ptitle").textContent=title;
+    txt=title+"\n\n";
+    slots.forEach(function(d,i){
+      var it=ideas[(i+seed)%ideas.length];
+      html+='<div class="day"><h3><span>'+DAYS[d]+'</span><span class="pill">'+esc(TIMES[it[0]])+'</span></h3><p><strong>'+esc(it[1])+'</strong></p><p class="muted">'+esc(it[2])+'</p></div>';
+      txt+=DAYS[d]+" – "+TIMES[it[0]]+": "+it[1]+"\n  "+it[2]+"\n";
+    });
+    document.getElementById("plan").innerHTML=html;last=txt;
+  }
+  document.getElementById("gen").addEventListener("click",function(){seed+=2;gen();});
+  ["ind","cnt"].forEach(function(id){document.getElementById(id).addEventListener("change",function(){seed=0;gen();});});
+  document.getElementById("name").addEventListener("input",gen);
+  document.getElementById("copy").addEventListener("click",function(){
+    var b=this;
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(last).then(function(){b.textContent="Kopiert ✓";setTimeout(function(){b.textContent="Plan kopieren";},1500);},function(){prompt("Plan kopieren:",last);});}
+    else prompt("Plan kopieren:",last);
+  });
+  gen();
+})();
+</script>
+</body>
+</html>

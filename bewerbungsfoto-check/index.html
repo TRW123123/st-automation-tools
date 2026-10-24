@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="ST Automation">
+<link rel="canonical" href="https://trw123123.github.io/st-automation-tools/bewerbungsfoto-check/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bewerbungsfoto-Check: Ist mein Bewerbungsfoto gut?</title>
+<meta name="description" content="Kostenlose Checkliste für Bewerbungsfotos und Profilbilder mit Punktzahl, Tipps und Pixelgrößen für LinkedIn, XING und Lebenslauf.">
+<style>
+*{box-sizing:border-box}
+:root{--bg:#f6f7fb;--card:#fff;--ink:#1d2433;--mut:#5b6475;--acc:#2f6fed;--acc2:#e8f0fe;--ok:#1f9d55;--warn:#d97706;--bad:#dc2626;--line:#e3e6ee}
+html,body{margin:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;font-size:16px}
+.wrap{max-width:860px;margin:0 auto;padding:24px 16px 40px}
+header h1{font-size:1.7rem;margin:.2em 0 .2em}
+header p{color:var(--mut);margin:0 0 1em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:16px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.card h2{font-size:1.15rem;margin:0 0 .6em}
+label{display:block;font-weight:600;font-size:.92rem;margin:.6em 0 .25em}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+button{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:11px 18px;font:inherit;font-weight:600;cursor:pointer;margin-top:12px}
+button.sec{background:var(--acc2);color:var(--acc)}
+button:hover{filter:brightness(1.05)}
+.out{white-space:pre-wrap}
+.muted{color:var(--mut);font-size:.9rem}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.85rem;color:var(--mut);font-weight:600}
+.pill{display:inline-block;background:var(--acc2);color:var(--acc);border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:600}
+footer{margin-top:28px;text-align:center;color:var(--mut);font-size:.9rem}
+footer a{color:var(--acc)}
+@media (max-width:520px){header h1{font-size:1.4rem}.card{padding:14px}}
+
+.crit{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.crit:last-child{border-bottom:0}
+.crit input{width:22px;height:22px;margin-top:2px;flex:0 0 auto;accent-color:var(--acc)}
+.crit label{margin:0;font-weight:600;cursor:pointer}
+.crit span{display:block;font-weight:400;color:var(--mut);font-size:.9rem}
+.score{font-size:2.4rem;font-weight:800}
+.bar{height:12px;background:var(--line);border-radius:99px;overflow:hidden;margin:6px 0 10px}
+.bar i{display:block;height:100%;width:0;background:var(--acc);transition:width .3s}
+#tips li{margin:.35em 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<span class="pill">Kostenloser Check</span>
+<h1>Ist mein Bewerbungsfoto gut?</h1>
+<p>Hake ab, was auf dein Foto zutrifft. Du bekommst sofort eine Punktzahl und konkrete Tipps. Alles läuft nur in deinem Browser – es wird nichts hochgeladen oder gespeichert.</p>
+</header>
+
+<section class="card">
+<h2>Checkliste</h2>
+<div id="list"></div>
+<button class="sec" id="reset" type="button">Zurücksetzen</button>
+</section>
+
+<section class="card" aria-live="polite">
+<h2>Ergebnis</h2>
+<div class="score"><span id="pts">0</span> / <span id="max">0</span></div>
+<div class="bar"><i id="barfill"></i></div>
+<p id="verdict" style="font-weight:600"></p>
+<ul id="tips"></ul>
+</section>
+
+<section class="card">
+<h2>Pixelgrößen-Helfer</h2>
+<p class="muted">Wähle, wofür du das Bild brauchst. Die Angaben sind gängige Empfehlungen; Plattformen können ihre Vorgaben ändern – im Zweifel lieber etwas größer hochladen.</p>
+<label for="use">Verwendung</label>
+<select id="use">
+<option value="linkedin">LinkedIn Profilbild</option>
+<option value="linkedinbanner">LinkedIn Hintergrundbild</option>
+<option value="xing">XING Profilbild</option>
+<option value="cv">Lebenslauf (PDF / Druck)</option>
+<option value="mail">E-Mail-Signatur</option>
+</select>
+<div id="size" style="margin-top:12px"></div>
+<h2 style="margin-top:18px">Passt mein Bild?</h2>
+<div class="grid">
+<div><label for="w">Breite (px)</label><input id="w" type="number" min="1" inputmode="numeric" placeholder="z. B. 1200"></div>
+<div><label for="h">Höhe (px)</label><input id="h" type="number" min="1" inputmode="numeric" placeholder="z. B. 1500"></div>
+</div>
+<p id="fit" class="muted" style="margin-top:10px"></p>
+</section>
+
+<footer>Ein kostenloses Tool von <a href="https://profilfoto-ki.de/" target="_blank" rel="noopener">Profilfoto KI</a> – KI-Bewerbungsfotos aus deinen Selfies, ab 4,99 €.<p class="muted" style="margin-top:8px">Made by <a href="https://profilfoto-ki.de/">Profilfoto KI</a> · <a href="../">Weitere kostenlose Tools von ST Automation</a></p></footer>
+</div>
+<script>
+(function(){
+  var C=[
+    ["licht","Gleichmäßiges, weiches Licht","Keine harten Schatten im Gesicht, keine überstrahlten Stellen.","Fotografiere frontal zum Fenster bei Tageslicht oder nutze diffuses Licht. Direkte Mittagssonne und Deckenlampen von oben vermeiden."],
+    ["hg","Ruhiger, neutraler Hintergrund","Einfarbig oder dezent unscharf, nichts lenkt ab.","Stell dich vor eine helle, einfarbige Wand oder sorge für Abstand zum Hintergrund, damit er unscharf wird."],
+    ["kleid","Passende Kleidung","Zur Branche und Wunschposition passend, sauber und faltenfrei.","Wähle Kleidung, die du auch im Vorstellungsgespräch tragen würdest. Unifarben wirkt meist ruhiger als starke Muster."],
+    ["blick","Direkter Blick in die Kamera","Augen auf Höhe der Linse, offener Gesichtsausdruck.","Kamera auf Augenhöhe stellen und direkt in die Linse schauen – nicht auf das Display."],
+    ["laecheln","Natürlicher, freundlicher Ausdruck","Leichtes Lächeln, entspannte Gesichtszüge.","Mehrere Aufnahmen machen und die natürlichste auswählen. Ein leichtes Lächeln wirkt meist zugänglich."],
+    ["ausschnitt","Richtiger Bildausschnitt","Kopf und Schultern, Gesicht etwa im oberen Drittel.","Schneide so zu, dass Kopf und Schulteransatz sichtbar sind und oberhalb des Kopfes etwas Luft bleibt."],
+    ["format","Passendes Format (4:5 oder 1:1)","Hochformat 4:5 für den Lebenslauf, quadratisch 1:1 für Profile.","Erstelle zwei Varianten: 4:5 für den Lebenslauf und 1:1 für LinkedIn und XING (wird dort rund angezeigt)."],
+    ["aufl","Ausreichende Auflösung","Mindestens ca. 800 × 1000 px für den Lebenslauf, scharf ohne Pixel.","Nutze die Hauptkamera statt digitalem Zoom und lade das Originalbild hoch, keine weitergeleitete Kopie aus Messengern."],
+    ["schaerfe","Scharf, rauschfrei, nicht verwackelt","Besonders die Augen sind scharf.","Smartphone abstützen oder Selbstauslöser nutzen und bei gutem Licht fotografieren, um Bildrauschen zu vermeiden."],
+    ["aktuell","Aktuell und authentisch","Zeigt dich so, wie du heute aussiehst; dezente Bearbeitung.","Verwende ein Foto, das nicht älter als ein bis zwei Jahre ist, und retuschiere nur leicht (z. B. Helligkeit, kleine Hautunreinheiten)."],
+    ["kein","Keine Selfie-Verzerrung, keine Filter","Kein Weitwinkel aus kurzer Distanz, keine Beauty- oder Farbfilter.","Abstand halten und lieber leicht heranzoomen (1–2×) oder zuschneiden; Filter und Sticker weglassen."]
+  ];
+  var list=document.getElementById("list");
+  C.forEach(function(c){
+    var d=document.createElement("div");d.className="crit";
+    d.innerHTML='<input type="checkbox" id="c_'+c[0]+'"><label for="c_'+c[0]+'">'+c[1]+'<span>'+c[2]+'</span></label>';
+    list.appendChild(d);
+  });
+  document.getElementById("max").textContent=C.length;
+  function update(){
+    var n=0,tips=document.getElementById("tips");tips.innerHTML="";
+    C.forEach(function(c){
+      if(document.getElementById("c_"+c[0]).checked){n++;}
+      else{var li=document.createElement("li");li.innerHTML="<strong>"+c[1]+":</strong> "+c[3];tips.appendChild(li);}
+    });
+    document.getElementById("pts").textContent=n;
+    var p=n/C.length;document.getElementById("barfill").style.width=(p*100)+"%";
+    var v;
+    if(n===C.length)v="Sehr gut – dein Foto erfüllt alle Punkte der Checkliste.";
+    else if(p>=0.8)v="Gut – mit ein paar Kleinigkeiten wird es noch besser.";
+    else if(p>=0.5)v="Ausbaufähig – die Tipps unten helfen dir weiter.";
+    else v="Hier lohnt sich ein neues Foto. Starte mit den Tipps unten.";
+    document.getElementById("verdict").textContent=v;
+  }
+  list.addEventListener("change",update);
+  document.getElementById("reset").addEventListener("click",function(){
+    list.querySelectorAll("input").forEach(function(i){i.checked=false;});update();
+  });
+  update();
+
+  var S={
+    linkedin:{w:400,h:400,rec:"1000 × 1000 px",ratio:1,note:"Quadratisch 1:1, wird rund angezeigt. Mindestens 400 × 400 px; Gesicht mittig platzieren."},
+    linkedinbanner:{w:1584,h:396,rec:"1584 × 396 px",ratio:4,note:"Format 4:1. Auf dem Smartphone wird links unten vom Profilbild überdeckt – wichtige Inhalte eher rechts."},
+    xing:{w:1024,h:1024,rec:"1024 × 1024 px",ratio:1,note:"Quadratisch 1:1. Ein großes, scharfes Bild sorgt für eine gute Darstellung auf allen Geräten."},
+    cv:{w:800,h:1000,rec:"1200 × 1500 px (4:5)",ratio:0.8,note:"Hochformat 4:5. Für den Druck in ca. 4 × 5 cm bei 300 dpi reichen rund 470 × 590 px; mehr Reserve schadet nicht."},
+    mail:{w:200,h:200,rec:"300 × 300 px",ratio:1,note:"Klein und quadratisch. Dateigröße gering halten, damit E-Mails schnell laden."}
+  };
+  function size(){
+    var s=S[document.getElementById("use").value];
+    document.getElementById("size").innerHTML='<table><tr><th>Empfohlen</th><th>Mindestens</th><th>Seitenverhältnis</th></tr><tr><td><strong>'+s.rec+'</strong></td><td>'+s.w+' × '+s.h+' px</td><td>'+ratioTxt(s.ratio)+'</td></tr></table><p class="muted">'+s.note+'</p>';
+    fit();
+  }
+  function ratioTxt(r){return r===1?"1:1":r===0.8?"4:5":r===4?"4:1":String(r);}
+  function fit(){
+    var s=S[document.getElementById("use").value];
+    var w=parseInt(document.getElementById("w").value,10),h=parseInt(document.getElementById("h").value,10),o=document.getElementById("fit");
+    if(!(w>0&&h>0)){o.textContent="Gib Breite und Höhe deines Bildes ein, um es zu prüfen.";return;}
+    var msgs=[];var r=w/h;
+    if(w<s.w||h<s.h)msgs.push("⚠️ Zu klein: mindestens "+s.w+" × "+s.h+" px empfohlen.");
+    else msgs.push("✅ Auflösung reicht aus.");
+    if(Math.abs(r-s.ratio)/s.ratio>0.03){
+      var nw,nh;
+      if(r>s.ratio){nh=h;nw=Math.round(h*s.ratio);}else{nw=w;nh=Math.round(w/s.ratio);}
+      msgs.push("✂️ Seitenverhältnis weicht ab ("+(Math.round(r*100)/100)+"). Zuschnitt auf "+nw+" × "+nh+" px ergibt "+ratioTxt(s.ratio)+".");
+    } else msgs.push("✅ Seitenverhältnis passt ("+ratioTxt(s.ratio)+").");
+    o.innerHTML=msgs.join("<br>");
+  }
+  document.getElementById("use").addEventListener("change",size);
+  document.getElementById("w").addEventListener("input",fit);
+  document.getElementById("h").addEventListener("input",fit);
+  size();
+})();
+</script>
+</body>
+</html>

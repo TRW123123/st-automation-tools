@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="ST Automation">
+<link rel="canonical" href="https://trw123123.github.io/st-automation-tools/car-video-shotlist/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Car Photo Shot List & Video Hook Generator</title>
+<meta name="description" content="Free tool: pick a car type and get the photo angles to shoot plus 5 hook lines for Reels and TikTok car videos.">
+<style>
+*{box-sizing:border-box}
+:root{--bg:#f6f7fb;--card:#fff;--ink:#1d2433;--mut:#5b6475;--acc:#2f6fed;--acc2:#e8f0fe;--ok:#1f9d55;--warn:#d97706;--bad:#dc2626;--line:#e3e6ee}
+html,body{margin:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;font-size:16px}
+.wrap{max-width:860px;margin:0 auto;padding:24px 16px 40px}
+header h1{font-size:1.7rem;margin:.2em 0 .2em}
+header p{color:var(--mut);margin:0 0 1em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:16px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.card h2{font-size:1.15rem;margin:0 0 .6em}
+label{display:block;font-weight:600;font-size:.92rem;margin:.6em 0 .25em}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+button{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:11px 18px;font:inherit;font-weight:600;cursor:pointer;margin-top:12px}
+button.sec{background:var(--acc2);color:var(--acc)}
+button:hover{filter:brightness(1.05)}
+.out{white-space:pre-wrap}
+.muted{color:var(--mut);font-size:.9rem}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.85rem;color:var(--mut);font-weight:600}
+.pill{display:inline-block;background:var(--acc2);color:var(--acc);border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:600}
+footer{margin-top:28px;text-align:center;color:var(--mut);font-size:.9rem}
+footer a{color:var(--acc)}
+@media (max-width:520px){header h1{font-size:1.4rem}.card{padding:14px}}
+
+.types{display:flex;flex-wrap:wrap;gap:8px}
+.types button{margin:0;background:var(--acc2);color:var(--acc)}
+.types button.on{background:var(--acc);color:#fff}
+ol{padding-left:1.3em}ol li{margin:.45em 0}
+.hook{display:flex;gap:10px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0}
+.hook button{margin:0;padding:6px 12px;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<span class="pill">Free tool</span>
+<h1>Car Photo Shot List & Video Hook Generator</h1>
+<p>Pick a car type to get the photo angles worth shooting and 5 opening hook lines for Reels or TikTok. Everything is generated from templates right in your browser.</p>
+</header>
+
+<section class="card">
+<h2>1. Car type</h2>
+<div class="types" id="types"></div>
+<div class="grid" style="margin-top:8px">
+<div><label for="name">Car name (optional)</label><input id="name" placeholder="e.g. 2022 Mazda CX-5"></div>
+<div><label for="aud">Audience</label><select id="aud"><option value="buyer">Private buyers</option><option value="fan">Car enthusiasts</option><option value="family">Families</option></select></div>
+</div>
+<button id="shuffle" type="button">New hooks</button>
+</section>
+
+<section class="card">
+<h2>2. Photo shot list</h2>
+<ol id="shots"></ol>
+<p class="muted">Shoot in landscape and portrait, keep the camera at the same height for exterior angles, and use soft light (overcast sky or the golden hour) to avoid harsh reflections.</p>
+</section>
+
+<section class="card" aria-live="polite">
+<h2>3. Five hook lines</h2>
+<div id="hooks"></div>
+<p class="muted">Use a hook as on-screen text in the first 1–2 seconds, then cut straight to your best angle.</p>
+</section>
+
+<footer>A free tool by <a href="https://aicarvideo.com/" target="_blank" rel="noopener">AI Car Video</a> – turn car photos into AI car videos.<p class="muted" style="margin-top:8px">Made by <a href="https://aicarvideo.com/">AI Car Video</a> · <a href="../">Weitere kostenlose Tools von ST Automation</a></p></footer>
+</div>
+<script>
+(function(){
+  var BASE=[
+    ["Front 3/4","The hero shot. Wheels turned slightly toward the camera, shot from headlight height."],
+    ["Side profile","Exactly 90°, whole car in frame – shows proportions and wheels."],
+    ["Rear 3/4","Mirror of the hero shot; tail lights and rear design."],
+    ["Dashboard & steering wheel","From the back seat or the open driver's door, screen switched on."],
+    ["Wheel close-up","Fill the frame with the rim and tyre; clean the wheel first."]
+  ];
+  var TYPES={
+    suv:{label:"SUV",extra:[["Low front angle","Crouch down – makes the SUV look tall and strong."],["Boot with seats folded","Show the full cargo space."],["Rear seats / legroom","Shot from the open rear door."]],
+      feat:"space",hooks:["This SUV fits more than you think 👀","Weekend trip test: does everything fit?","{name}: big on space, easy to park?","3 things nobody tells you about this SUV","POV: your family finally has enough room"]},
+    sedan:{label:"Sedan",extra:[["Long side detail","Slight angle along the beltline to show the silhouette."],["Rear seat comfort","Show legroom from the open door."],["Boot opening","Lid open, empty and clean."]],
+      feat:"comfort",hooks:["The daily driver that feels like an upgrade","{name} in 15 seconds","Why this sedan is still underrated","Comfort check: front to back","Would you swap your car for this one?"]},
+    hatch:{label:"Hatchback",extra:[["Front low and centred","Makes a small car look confident."],["Hatch open","Show how much fits through the opening."],["City backdrop","Parked in a street scene to show its home turf."]],
+      feat:"city",hooks:["Small car, zero compromises?","{name}: the perfect city car?","Parking in 3 seconds – watch this","Everything you need, nothing you don't","First car? Look at this one"]},
+    sports:{label:"Sports car",extra:[["Very low front 3/4","Camera almost on the ground – aggressive stance."],["Exhaust & rear diffuser","Tight detail shot, ideally with a short sound clip."],["Seats & gear lever","Close-ups of the sporty interior details."]],
+      feat:"performance",hooks:["Turn your sound on for this one 🔊","{name} – look at that stance","Stop scrolling. This is the one.","5 seconds that will make your day","Weekend car or daily driver?"]},
+    ev:{label:"Electric",extra:[["Charging port","Port open, cable plugged in if available."],["Range display","Screen showing range or battery level, readable."],["Front boot / storage","Show the extra storage if the car has one."]],
+      feat:"electric",hooks:["Thinking about going electric? Watch this","{name}: what the range screen really shows","Quiet, quick and ready to charge ⚡","EV in 15 seconds: the key facts","Questions about this EV? Ask in the comments"]},
+    van:{label:"Van / Pickup",extra:[["Load area open","All doors open, empty, clean, measured if possible."],["Driver's cab","Show storage compartments and seating."],["Towing / bed detail","Tow bar, bed liner or roof rails if equipped."]],
+      feat:"work",hooks:["Ready to work from day one","{name}: how much fits in the back?","The workhorse tour in 20 seconds","Your business needs this kind of space","Load test: let's open it up"]},
+    classic:{label:"Classic",extra:[["Badge & chrome details","Close-ups of emblems and chrome trim."],["Original interior","Dashboard, gauges and upholstery."],["Engine bay","Bonnet open, clean engine, good light."]],
+      feat:"heritage",hooks:["They don't build them like this anymore","{name} – a piece of history","Look at these details 😍","Would you drive this every day?","Spot the original parts"]}
+  };
+  var AUD={buyer:["Available now – message us for details","Book a test drive this week?"],fan:["Rate it 1–10 in the comments","Which angle is your favourite?"],family:["Kids, bags, pram – does it all fit?","Family-approved? Tell us below"]};
+  var cur="suv",seed=0;
+  var box=document.getElementById("types");
+  Object.keys(TYPES).forEach(function(k){
+    var b=document.createElement("button");b.type="button";b.textContent=TYPES[k].label;b.dataset.k=k;
+    b.addEventListener("click",function(){cur=k;seed=0;render();});box.appendChild(b);
+  });
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+  function render(){
+    box.querySelectorAll("button").forEach(function(b){b.classList.toggle("on",b.dataset.k===cur);});
+    var t=TYPES[cur];
+    var shots=BASE.slice(0,3).concat(t.extra.slice(0,1),BASE.slice(3),t.extra.slice(1));
+    shots.push(["Detail of your choice","One unique feature that sets this car apart."]);
+    document.getElementById("shots").innerHTML=shots.map(function(s){return "<li><strong>"+esc(s[0])+":</strong> "+esc(s[1])+"</li>";}).join("");
+    var name=document.getElementById("name").value.trim()||("This "+{suv:"SUV",sedan:"sedan",hatch:"hatchback",sports:"sports car",ev:"EV",van:"van",classic:"classic"}[cur]);
+    var pool=t.hooks.concat(AUD[document.getElementById("aud").value]);
+    var picked=[];for(var i=0;i<5;i++){picked.push(pool[(i+seed)%pool.length]);}
+    document.getElementById("hooks").innerHTML=picked.map(function(h){
+      var txt=h.replace("{name}",name);
+      return '<div class="hook"><span>'+esc(txt)+'</span><button class="sec" type="button" data-t="'+esc(txt)+'">Copy</button></div>';
+    }).join("");
+  }
+  document.getElementById("hooks").addEventListener("click",function(e){
+    var b=e.target.closest("button");if(!b)return;var t=b.getAttribute("data-t");
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){b.textContent="Copied ✓";setTimeout(function(){b.textContent="Copy";},1200);});}
+  });
+  document.getElementById("shuffle").addEventListener("click",function(){seed++;render();});
+  document.getElementById("name").addEventListener("input",render);
+  document.getElementById("aud").addEventListener("change",render);
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="ST Automation">
+<link rel="canonical" href="https://trw123123.github.io/st-automation-tools/autohaus-video-planer/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fahrzeugvideo-Planer für Autohäuser: Skript & Shotlist</title>
+<meta name="description" content="Kostenloser Planer für Autohäuser: Aus Marke, Modell, Highlights und Preis entsteht ein 15–30-Sekunden-Videoskript plus Shotlist für 8 Fotos.">
+<style>
+*{box-sizing:border-box}
+:root{--bg:#f6f7fb;--card:#fff;--ink:#1d2433;--mut:#5b6475;--acc:#2f6fed;--acc2:#e8f0fe;--ok:#1f9d55;--warn:#d97706;--bad:#dc2626;--line:#e3e6ee}
+html,body{margin:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;font-size:16px}
+.wrap{max-width:860px;margin:0 auto;padding:24px 16px 40px}
+header h1{font-size:1.7rem;margin:.2em 0 .2em}
+header p{color:var(--mut);margin:0 0 1em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:16px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.card h2{font-size:1.15rem;margin:0 0 .6em}
+label{display:block;font-weight:600;font-size:.92rem;margin:.6em 0 .25em}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+button{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:11px 18px;font:inherit;font-weight:600;cursor:pointer;margin-top:12px}
+button.sec{background:var(--acc2);color:var(--acc)}
+button:hover{filter:brightness(1.05)}
+.out{white-space:pre-wrap}
+.muted{color:var(--mut);font-size:.9rem}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.85rem;color:var(--mut);font-weight:600}
+.pill{display:inline-block;background:var(--acc2);color:var(--acc);border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:600}
+footer{margin-top:28px;text-align:center;color:var(--mut);font-size:.9rem}
+footer a{color:var(--acc)}
+@media (max-width:520px){header h1{font-size:1.4rem}.card{padding:14px}}
+
+.scene{border-left:4px solid var(--acc);padding:6px 12px;margin:10px 0;background:#fafbff;border-radius:0 8px 8px 0}
+.scene b{color:var(--acc)}
+.shot{counter-increment:s}
+ol{padding-left:1.3em}
+ol li{margin:.4em 0}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row button{margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<span class="pill">Kostenloser Planer</span>
+<h1>Fahrzeugvideo-Planer</h1>
+<p>Fahrzeugdaten eingeben und ein fertiges Skript für ein 15–30-Sekunden-Video plus Shotlist für 8 Fotos erhalten. Alles wird lokal aus Vorlagen erzeugt – ohne KI-Aufruf, ohne Upload.</p>
+</header>
+
+<section class="card">
+<h2>Fahrzeugdaten</h2>
+<div class="grid">
+<div><label for="make">Marke</label><input id="make" value="Volkswagen"></div>
+<div><label for="model">Modell</label><input id="model" value="Golf Variant 1.5 eTSI"></div>
+<div><label for="year">Baujahr / EZ</label><input id="year" type="number" min="1950" max="2035" value="2021"></div>
+<div><label for="km">Kilometerstand</label><input id="km" type="number" min="0" step="1000" value="48000"></div>
+</div>
+<div class="grid">
+<div><label for="h1">Highlight 1</label><input id="h1" value="Digitales Cockpit"></div>
+<div><label for="h2">Highlight 2</label><input id="h2" value="Sitzheizung"></div>
+<div><label for="h3">Highlight 3</label><input id="h3" value="Großer Kofferraum"></div>
+</div>
+<div class="grid">
+<div><label for="price">Preis (€)</label><input id="price" type="number" min="0" step="100" value="21900"></div>
+<div><label for="len">Videolänge</label><select id="len"><option value="15">15 Sekunden</option><option value="20">20 Sekunden</option><option value="30" selected>30 Sekunden</option></select></div>
+<div><label for="tone">Tonalität</label><select id="tone"><option value="seri">Seriös</option><option value="lock">Locker</option><option value="dyn">Dynamisch</option></select></div>
+</div>
+<div class="row"><button id="gen" type="button">Skript erstellen</button><button id="copy" class="sec" type="button">Als Text kopieren</button></div>
+</section>
+
+<section class="card" aria-live="polite">
+<h2>Videoskript <span class="pill" id="dur"></span></h2>
+<div id="script"></div>
+</section>
+
+<section class="card">
+<h2>Shotlist: 8 Fotos</h2>
+<ol id="shots"></ol>
+<p class="muted">Tipp: Fahrzeug sauber, Kennzeichen ggf. abdecken, immer an derselben ruhigen Stelle fotografieren und alle Fotos im Querformat aus gleicher Höhe aufnehmen.</p>
+</section>
+
+<footer>Ein kostenloses Tool von <a href="https://autohaus-video.de/" target="_blank" rel="noopener">Autohaus Video</a> – Videos aus dem Fahrzeugbestand für Autohäuser.<p class="muted" style="margin-top:8px">Made by <a href="https://autohaus-video.de/">Autohaus Video</a> · <a href="../">Weitere kostenlose Tools von ST Automation</a></p></footer>
+</div>
+<script>
+(function(){
+  function v(id){return document.getElementById(id).value.trim();}
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+  function fmt(n){n=parseInt(n,10);return isNaN(n)?"":n.toLocaleString("de-DE");}
+  var T={
+    seri:{hook:"Gepflegt, geprüft, bereit für Sie: der {car}.",cta:"Jetzt Probefahrt vereinbaren – wir freuen uns auf Sie.",hl:"Mit an Bord: {h}."},
+    lock:{hook:"Na, wie wär's mit dem hier? Der {car}!",cta:"Lust bekommen? Schreib uns oder komm vorbei!",hl:"Und das Beste: {h}."},
+    dyn:{hook:"Startklar: der {car}!",cta:"Schnell sein lohnt sich – jetzt anfragen!",hl:"{h} – sofort verfügbar."}
+  };
+  var lastText="";
+  function gen(){
+    var make=v("make")||"Marke",model=v("model")||"Modell",year=v("year"),km=fmt(v("km")),price=fmt(v("price"));
+    var hs=[v("h1"),v("h2"),v("h3")].filter(Boolean);
+    var len=parseInt(v("len"),10),t=T[v("tone")];
+    var car=make+" "+model;
+    var facts=[year?"Baujahr "+year:"",km?km+" km":""].filter(Boolean).join(", ");
+    var S=[];
+    S.push({t:"Hook",img:"Front 3/4-Ansicht, langsamer Zoom",txt:t.hook.replace("{car}",car)});
+    if(facts)S.push({t:"Eckdaten",img:"Seitenansicht",txt:facts+"."});
+    if(len>=20){hs.forEach(function(h,i){S.push({t:"Highlight "+(i+1),img:["Cockpit / Innenraum","Detailaufnahme","Kofferraum / Heck"][i]||"Detail",txt:t.hl.replace("{h}",h)});});}
+    else if(hs.length){S.push({t:"Highlights",img:"Innenraum, schnelle Schnitte",txt:hs.join(" · ")+"."});}
+    if(price)S.push({t:"Preis",img:"Heck 3/4-Ansicht mit Preiseinblendung",txt:"Für "+price+" €."});
+    S.push({t:"Call to Action",img:"Logo / Kontakt-Einblendung",txt:t.cta});
+    var per=len/S.length,acc=0,html="",txt=car+" – Videoskript ("+len+" s)\n\n";
+    S.forEach(function(s){
+      var a=Math.round(acc),b=Math.round(acc+per);acc+=per;
+      html+='<div class="scene"><b>'+a+'–'+b+' s · '+esc(s.t)+'</b><br>🎬 '+esc(s.img)+'<br>💬 Text/Sprecher: „'+esc(s.txt)+'“</div>';
+      txt+=a+"–"+b+" s | "+s.t+"\nBild: "+s.img+"\nText: "+s.txt+"\n\n";
+    });
+    document.getElementById("script").innerHTML=html;
+    document.getElementById("dur").textContent=len+" s · "+S.length+" Szenen";
+    var shots=[
+      ["Front 3/4 links","Aus ca. 1 m Höhe, Räder leicht zur Kamera eingeschlagen – das Titelbild."],
+      ["Seitenansicht","Exakt im 90°-Winkel, ganzes Fahrzeug im Bild, Felgen sichtbar."],
+      ["Heck 3/4 rechts","Gleicher Abstand wie Front, Rückleuchten und Heckdesign zeigen."],
+      ["Front frontal","Mittig, auf Scheinwerferhöhe, Kühlergrill und Logo."],
+      ["Cockpit","Von der Rückbank oder Fahrertür, Lenkrad und Display im Bild"+(hs[0]?" – Fokus: "+hs[0]:"")+"."],
+      ["Detail-Highlight",(hs[1]?hs[1]:"Ausstattungsdetail")+" groß und scharf ins Bild setzen."],
+      ["Kofferraum / Rücksitze",(hs[2]?hs[2]+" – ":"")+"Laderaum geöffnet und aufgeräumt zeigen."],
+      ["Tacho / Kilometerstand","Zündung an, Anzeige gut lesbar"+(km?" ("+km+" km)":"")+" – schafft Vertrauen."]
+    ];
+    document.getElementById("shots").innerHTML=shots.map(function(s){return "<li><strong>"+esc(s[0])+":</strong> "+esc(s[1])+"</li>";}).join("");
+    txt+="Shotlist (8 Fotos)\n"+shots.map(function(s,i){return (i+1)+". "+s[0]+": "+s[1];}).join("\n");
+    lastText=txt;
+  }
+  document.getElementById("gen").addEventListener("click",gen);
+  document.getElementById("copy").addEventListener("click",function(){
+    var b=this;
+    function done(){b.textContent="Kopiert ✓";setTimeout(function(){b.textContent="Als Text kopieren";},1500);}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(lastText).then(done,function(){prompt("Text kopieren:",lastText);});}
+    else prompt("Text kopieren:",lastText);
+  });
+  gen();
+})();
+</script>
+</body>
+</html>
