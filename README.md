@@ -11,3 +11,7 @@ Live: https://trw123123.github.io/st-automation-tools/
 - [Social-Media-Wochenplan](https://trw123123.github.io/st-automation-tools/social-media-wochenplan/) – made by [KI Automatisieren](https://ki-automatisieren.de/)
 
 Author: ST Automation
+
+## Agent Skill Starter (free SKILL.md templates)
+
+Two free `SKILL.md` files for AI coding agents (Claude Code, Codex, Cursor): [agent-skill-starter/](./agent-skill-starter/). The full kit with six skills is on [Payhip](https://payhip.com/b/sxCKk).
